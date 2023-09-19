@@ -1,17 +1,24 @@
 from flask import Response, request, render_template, redirect
 from flask_login import current_user, login_user, logout_user, login_required
-
+from datetime import timedelta
 from . import app, db
 from .models import User, Account, Country
+
 
 @app.route('/')
 @app.route('/index')
 def index():
+    if(current_user.is_authenticated):
+        return redirect('account')
+    
     return render_template('index.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if(current_user.is_authenticated):
+        return redirect('account')
+
     if request.method == 'POST':
         country_code = request.form.get('countryCode')
         msisdn = country_code + request.form.get('msisdn')
@@ -27,20 +34,23 @@ def login():
         if(not user.check_password_hash(password)):
             return render_template('login.html', message='Incorrect password')
         
-        login_user(user)
+        login_user(user, duration=timedelta(minutes=10))
 
         return redirect('account')
 
     return render_template('login.html', message='')
+
 
 @app.route('/logout', methods=['GET'])
 def logout():
     logout_user()
     return redirect('index')
 
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    
+    logout_user()
+
     if(request.method == 'POST'):
         country_code = request.form.get('countryCode')
         country_name = request.form.get('country')
@@ -79,7 +89,7 @@ def register():
 
         print(f'{user}\n{account}\n{country}')
 
-        login_user(user)
+        login_user(user, duration=timedelta(minutes=10))
 
         return redirect('account')
     
