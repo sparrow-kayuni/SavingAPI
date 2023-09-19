@@ -6,11 +6,6 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/account', methods=['GET'])
-def account():
-    return render_template('account.html')
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -31,3 +26,7 @@ def register():
         return redirect('account')
     
     return render_template('register.html')
+
+@app.route('/account', methods=['GET'])
+def account():
+    return render_template('account.html')

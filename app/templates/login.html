@@ -1,21 +1,33 @@
 {% extends "base.html" %}
 {% block page %}
-<h1>Login</h1>
-<form method="post" action="login" class="form-group card">
+
+<div class="container">
+    <div class="row m-3">
+        <h1>Login</h1>
+    </div>
     
-    <div class="mt-5 p-2">
-        <label for="phone">MSISDN</label> <br>
-        <select class="form-control" name="countryCode" id="countryCodeSelect" onclick="changePhoneCode(event)" style="width: 100px;"></select>
-        <input type="number" class="form-control" name="phone" id="phoneNo" placeholder="Enter MSISDN"> 
+    <div class="row p-3">
+        <form method="post" action="login" class="form-group card row col-md-4">            
+            <div class="mt-2 p-2">
+                <label for="countryCode">Country</label> <br>
+                <select class="form-control " name="countryCode" id="countryCodeSelect" onclick="changePhoneCode(event)"></select>
+            </div>
+            <div class="mt-2 p-2">
+                <label for="phone">MSISDN</label> <br>
+                <input type="number" class="form-control" name="phone" id="phoneNo" placeholder="Enter MSISDN" required> 
+            </div>
+            <div class="mt-2 p-2">
+                <label for="password">Password</label> <br>
+                <input type="password" class="form-control" name="password" id="" placeholder="Enter Password" required> 
+            </div>
+
+            <div class="mt-2 mb-2 p-2 d-flex" style="flex-direction: row; justify-content: right;">
+                <input type="submit" class="btn btn-primary w-50" value="LOGIN">
+            </div>
+            <p class="" style="font-size: 0.7em;">Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
+        </form>
     </div>
-    <div class="mt-5 p-2">
-        <label for="password">Password</label> <br>
-        <input type="password" class="form-control" name="password" id="" placeholder="Enter Password"> 
-    </div>
-    <div class="">
-        <input type="submit" class="btn btn-primary" value="LOGIN">
-    </div>
-</form>
+</div>
 
 <script >
     country_code_data = [{
