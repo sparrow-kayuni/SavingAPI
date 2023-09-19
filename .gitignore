@@ -1,0 +1,4 @@
+/savingapi_env/*
+/.flaskenv
+/__pycache__/*
+/*/__pycache__/**
