@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% block page %}
+<h4 class="mb-3">Welcome, {{ current_user.username }}!</h4>
 <h1>Fundraiser Account</h1>
 <div class="">
     <p>Start your savings journey here</p>
 </div>
+<span style="font-size:0.8em;"><a href="{{ url_for('logout') }}">Logout</a></span>
 {% endblock page %}

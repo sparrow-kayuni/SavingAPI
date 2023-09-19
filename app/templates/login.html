@@ -5,7 +5,9 @@
     <div class="row m-3">
         <h1>Login</h1>
     </div>
-    
+    <span class="p-4">
+        <p style="color: lightcoral">{{ message }}</p>
+    </span>
     <div class="row p-3">
         <form method="post" action="login" class="form-group card row col-md-4">            
             <div class="mt-2 p-2">
@@ -13,8 +15,8 @@
                 <select class="form-control " name="countryCode" id="countryCodeSelect" onclick="changePhoneCode(event)"></select>
             </div>
             <div class="mt-2 p-2">
-                <label for="phone">MSISDN</label> <br>
-                <input type="number" class="form-control" name="phone" id="phoneNo" placeholder="Enter MSISDN" required> 
+                <label for="msisdn">MSISDN</label> <br>
+                <input type="number" class="form-control" name="msisdn" id="phoneNo" placeholder="Enter MSISDN" required> 
             </div>
             <div class="mt-2 p-2">
                 <label for="password">Password</label> <br>

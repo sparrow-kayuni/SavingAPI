@@ -1,58 +1,4 @@
-{% extends "base.html" %}
-{% block page %}
-<div class="container">
-    <div class="row m-3">
-        <h1>Register</h1>
-    </div>
-    <span class="p-4">
-        <p style="color: lightcoral">{{ message }}</p>
-    </span>
-    <form method="post" action="register" class="form-group row " style="justify-content: left">
-        <div class="p-3 card col-md-4" id="accountInfo" style="transition: display 300ms ease-out;">
-            <input type="hidden" name="country" id="countryName">
-            
-            <div class="mt-2 p-2">
-                <label for="countryCode">Country</label> <br>
-                <select class="form-control " name="countryCode" id="countryCodeSelect" onclick="changePhoneCode(event)" required></select>
-            </div>
-            <div class="mt-2 p-2">
-                <label for="msisdn">MSISDN</label> <br>
-                <input type="number" class="form-control" name="msisdn" id="phoneNo" placeholder="Enter MSISDN" required> 
-            </div>
-            <div class="mt-2 p-2">
-                <label for="password">Password</label> <br>
-                <input type="password" class="form-control" name="password" id="passwordField" placeholder="Enter Password" required> 
-            </div>
-            <div class="mt-2 mb-2 p-2 d-flex" style="flex-direction: row; justify-content: right;">
-                <button class="btn btn-primary w-50" id="continueBtn" onclick="continueToRegister(event)">CONTINUE  &#10095;</button>
-            </div>
-            <p class="" style="font-size: 0.7em;">Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
-        </div>
-
-        <div class="p-3 card col-md-4 d-none" id="userInfo" style="transition: display 300ms ease-out;">
-           
-            <div class="mt-2 p-2">
-                <label for="username">Username</label> <br>
-                <input type="text" class="form-control" name="username" id="username" placeholder="Enter Username" required> 
-            </div>
-            <div class="mt-2 p-2">
-                <label for="accountType">Account Type</label> <br>
-                <select class="form-control " name="accountType" id="accountType" required>
-                    <option value="1">Individual Account</option>
-                    <option value="2">Group Account (Not Implemented Yet)</option>
-                </select>
-            </div>
-            <div class="mt-2 mb-2 p-2 d-flex" style="flex-direction: row; justify-content: space-between;">
-                <button class="btn" onclick="returnFromRegister(event)">&#10094;  PREVIOUS </button>
-                <input type="submit" class="btn btn-primary w-50" id="registerBtn" value="CREATE ACCOUNT">
-            </div>
-        </div> 
-    </form>   
-</div>
-
-
-<script >
-    country_code_data = [{
+country_code_data = [{
     "name": "Afghanistan",
     "dial_code": "+93",
     "emoji": "🇦🇫",
@@ -1505,60 +1451,12 @@
     "code": "ZW"
 }
 ]
-    
-    countryCodeSelectField = document.getElementById('countryCodeSelect');
-    phoneNoField = document.getElementById('phoneNo');
-    countryName = document.getElementById('countryName');
-    passwordField = document.getElementById('passwordField');
-    usernameField = document.getElementById('username');
-    accountType = document.getElementById('accountType');
 
-    userInfo = document.getElementById('userInfo');
-    accountInfo = document.getElementById('accountInfo');
+from app import db
+from app.models import Country
 
+for country in country_code_data:
+    country = Country(country_name=country['name'], country_code=country['dial_code'])
+    db.session.add(country)
 
-    continueBtn = document.getElementById('continueBtn');
-    registerBtn = document.getElementById('registerBtn');
-
-    for(var i = 0; i < country_code_data.length; i++)
-    {
-        option = document.createElement('OPTION');
-        option.value = country_code_data[i].dial_code;
-        node = document.createTextNode(country_code_data[i].name + " (" + option.value +  ") ");
-
-        option.appendChild(node);
-        countryCodeSelectField.appendChild(option);
-        // pass
-    }
-
-    function changePhoneCode(event)
-    {
-        event.preventDefault();
-
-        countryName.value = country_code_data[countryCodeSelectField.selectedIndex].name;
-    }
-
-    function continueToRegister(event)
-    {
-        event.preventDefault();
-
-        var msisdn = countryCodeSelectField.value + phoneNoField;
-
-        
-
-        if(!(phoneNoField.value == "" || passwordField.value == ""))
-        {
-            accountInfo.classList.add('d-none');
-            userInfo.classList.remove('d-none');
-        }
-    }
-
-    function returnFromRegister(event)
-    {
-        event.preventDefault();
-        
-        accountInfo.classList.remove('d-none');
-        userInfo.classList.add('d-none');
-    }
-</script>
-{% endblock page %}
+db.session.commit()
