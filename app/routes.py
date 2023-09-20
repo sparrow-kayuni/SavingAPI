@@ -100,3 +100,22 @@ def register():
 @login_required
 def account():
     return render_template('account.html')
+
+
+@app.route('/deposit', methods=['GET', 'POST'])
+@login_required
+def deposit():
+    return render_template('deposit.html')
+
+
+@app.route('/withdraw', methods=['GET', 'POST'])
+@login_required
+def withdraw():
+    return render_template('withdraw.html')
+
+
+@app.route('/settings', methods=['GET', 'POST'])
+@login_required
+def settings():
+    return render_template('settings.html')
+

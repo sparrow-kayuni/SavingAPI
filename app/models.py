@@ -12,6 +12,7 @@ class User(UserMixin, db.Model):
     msisdn = db.Column(db.String(50), nullable=False, unique=True)
     password = db.Column(db.String(50), nullable=False)
     account_id = db.Column(db.Integer, db.ForeignKey('account.account_id'))
+    payments = db.relationship('Payment', backref='user', lazy='dynamic')
     
     def get_id(self):
         return self.user_id
@@ -48,6 +49,7 @@ class Account(db.Model):
     balance = db.Column(db.Float, default=0)
     members = db.relationship('User', backref='account', lazy='dynamic')
     country_id = db.Column(db.Integer, db.ForeignKey('country.country_id'))
+    payments = db.relationship('Payment', backref='account', lazy='dynamic')
 
 
     def __repr__(self):
@@ -58,9 +60,20 @@ class Country(db.Model):
     country_id = db.Column(db.Integer, primary_key=True)
     country_name = db.Column(db.String(40), nullable=False)
     country_code = db.Column(db.String(10), nullable=False)
-    # currency = db.Column(db.String(5))
     accounts = db.relationship('Account', backref='country', lazy='dynamic')
 
     def __repr__(self):
         return f'Country<{self.country_name}, {self.country_code}>'
-    
+
+
+class Payment(db.Model):
+    payment_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
+    account_id = db.Column(db.Integer, db.ForeignKey('account.account_id'))
+    payment_type = db.Column(db.Enum('deposit', 'withdraw'))
+    currency = db.Column(db.String(30), nullable=False)
+    time = db.Column(db.DateTime())
+    amount = db.Column(db.Float, default=0, nullable=False)
+
+    def __repr__(self):
+        return f'<{self.payer}, {self.account}>'
