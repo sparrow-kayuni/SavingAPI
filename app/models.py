@@ -11,17 +11,24 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(30), nullable=False, unique=True)
     msisdn = db.Column(db.String(50), nullable=False, unique=True)
     password = db.Column(db.String(50), nullable=False)
+    verification_status = db.Column(db.String(10), default='PENDING')
     account_id = db.Column(db.Integer, db.ForeignKey('account.account_id'))
     payments = db.relationship('Payment', backref='user', lazy='dynamic')
     
     def get_id(self):
         return self.user_id
     
+    def is_verified(self):
+        if self.verification_status == 'VERIFIED':
+            return True
+        elif self.verification_status == 'PENDING':
+            return False
+        else:
+            return False
     
     def __repr__(self):
-        return f'User<{self.username}, {self.msisdn}>'
+        return f'User<{self.username}, {self.msisdn}, {self.verification_status}>'
     
-
     def msisdn_exists(self, msisdn):
         if (User.query.filter_by(msisdn=msisdn).first() != None):
             return True
@@ -34,11 +41,9 @@ class User(UserMixin, db.Model):
         
         return False
     
-
     def set_password(self, password):
         self.password = generate_password_hash(password)
     
-
     def check_password_hash(self, password):
         return check_password_hash(self.password, password)
 
@@ -60,6 +65,8 @@ class Country(db.Model):
     country_id = db.Column(db.Integer, primary_key=True)
     country_name = db.Column(db.String(40), nullable=False)
     country_code = db.Column(db.String(10), nullable=False)
+    dial_code = db.Column(db.String(5))
+    currency = db.Column(db.String(8))
     accounts = db.relationship('Account', backref='country', lazy='dynamic')
 
     def __repr__(self):

@@ -82,7 +82,7 @@ def register():
 
         db.session.add(account)
 
-        user = User(username=username, msisdn=msisdn, account=account)
+        user = User(username=username, msisdn=msisdn, account=account, verification_status='PENDING')
         
         user.set_password(password=password)
 
@@ -106,14 +106,18 @@ def verify_otp(id):
 
         phone = user.msisdn
         otp_code = request.form.get('otp')
+        resend = request.form.get('resend')
 
         print(f'Phone: {phone}\n OTP: {otp_code}')
 
         client = OTPVerificationClient()
 
-        if not (request.form.get('phone') == None or phone == ''):
+        if not (request.form.get('phone') == None or phone == '') or resend == 'true':
+            
+            print(f'Resend: {resend}')
 
             verification = client.send_otp(phone)
+            
             print(f'Verification Status: {verification.status}')
             return render_template('verify_otp.html', user=user)
 
@@ -122,10 +126,18 @@ def verify_otp(id):
             check = client.verify_otp(phone, otp_code)
             
             print(f'Check status: {check.status}')
-            
-            login_user(user, duration=timedelta(minutes=10))
 
-            return redirect('account')
+            if (check.status == 'approved'):
+                user.verification_status = 'VERIFIED'
+                db.session.add(user)
+                db.session.commit()
+            
+            if user.is_verified():
+                login_user(user, duration=timedelta(minutes=10))
+                return redirect('account')
+            else:
+                return render_template('verify_otp.html', user=user, message='Incorrect OTP. Try Again')
+
         
     return render_template('send_otp.html', user=user)
 

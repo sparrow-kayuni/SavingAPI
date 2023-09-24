@@ -1,19 +1,38 @@
 {% extends "base.html" %}
 {% block page %}
+{% if message %}
+    <span class="p-3" style="background-color: cadetblue; border-radius: 2px"> {{ message }}</span>
+{% else %}
+{% endif %}
 <div class="container">
     <h1 class="mb-5">Verify Phone Number.</h1>
     <form method="post" class="form-group card row col-md-6 p-3">
-        <h3 class="p-3">Enter Number sent to {{ user.msisdn }}.</h3>
+        <h3 class="p-3">Enter OTP sent to {{ user.msisdn }}.</h3>
         <div class="mt-4" id="otp">
             <div class="mt-2">
-                <label for="phone">OTP</label>
+                <label for="otp">OTP</label>
                 <input type="number" name="otp" class="form-control" id="otpField" placeholder="Enter OTP">
             </div>
             <div class="mt-4 d-flex" style="flex-direction: row; justify-content: space-between;">
+                <button class='btn btn-secondary invisible' id="resendButton" onclick="resendOtp(event)" name="resend" style="transition: all 300ms ease-in" value="false">RESEND CODE</button>
                 <input type="submit" name="verifyOtp" class="btn btn-primary py-3 px-4" value="VERIFY">
             </div>
         </div>
-        
+        <div class="mt-2 d-none text-danger" style="font-size: 0.8em;" id="resendPrompt">Didnt receive SMS? Click Resend Code</div>
     </form>
 </div>
+<script>
+    resendButton = document.getElementById('resendButton');
+    resendPrompt = document.getElementById('resendPrompt');
+
+    setTimeout(() => {
+        resendButton.classList.remove('invisible');
+        resendPrompt.classList.remove('d-none');
+    }, 10000);
+
+    function resendOtp(event)
+    {
+        resendButton.value = "true"
+    }
+</script>
 {% endblock page %}
