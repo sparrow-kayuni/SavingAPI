@@ -3,8 +3,14 @@
 <div class="container">
     <h4 class="mb-3">Welcome, {{ current_user.username }}!</h4>
     <h1>Fundraiser Account</h1>
-    <div class="">
-        <p>Start your savings journey here</p>
+    <div class="row">
+        <span class="p-3">Deposit your startup amount to activate account </span>
+        <div class="mt-3 d-flex w-50" style="flex-direction: row; justify-content: right;">
+            
+            <a href="{{ url_for('deposit') }}" class="btn btn-primary p-3">
+                <span class="m-2">Deposit</span>
+            </a>
+        </div>
     </div>
     <span style="font-size:0.8em;"><a href="{{ url_for('logout') }}">Logout</a></span>
 </div>

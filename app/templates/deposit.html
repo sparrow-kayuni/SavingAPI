@@ -1,20 +1,77 @@
 {% extends "base.html" %}
 {% block page %}
 <div class="container">
-    <h1>Deposit Into Account</h1>
+    <h1 class="mb-5">Deposit Into Your Account.</h1>
     <form action="/deposit" method="post" class="form-group card row col-md-6 p-3">
-        <div class="mt-2">
-            <label for="currency">Currency</label>
-            <select name="currency" class="form-control" id="currencySelectField"></select>
+        <h3 class="p-3">Enter the amount you wish to deposit.</h3>
+        <div class="mt-4" id="payment">
+            <div class="">
+                <label for="currency">Currency</label>
+                <select name="currency" class="form-control" id="currencySelectField">
+                    <option value="KSH">Kenyan Shillings</option>
+                    <option value="N">Nigerian Naira</option>
+                    <option value="ZAR">South African Rand</option>
+                    <option value="ZMW">Zambian Kwacha</option>
+                </select>
+            </div>
+            <div class="mt-2">
+                <label for="amount">Initial Payment</label>
+                <input type="number" name="initialPayment" class="form-control" id="initialPaymentField" placeholder="Enter payment amount here">
+            </div>
+            <div class="mt-4 d-flex" style="flex-direction: row; justify-content: flex-end;">
+                <button type="reset" class="btn btn-primary p-3" onclick="continueToSettings(event)" id="continueButton"> CONTINUE &#10095;  </button>
+            </div>
         </div>
-        <div class="mt-2">
-            <label for="amount">Amount</label>
-            <input type="number" name="amount" class="form-control" id="amountField" placeholder="Enter amount here">
+        <div class="mt-4 d-none" id="settings">
+            <div class="mt-2">
+                <label for="monthlyContribution">Monthly Amount</label>
+                <input type="number" name="monthlyContribution" class="form-control" id="monthlyContribution" placeholder="Enter monthly contribution">
+            </div>
+            <div class="mt-2">
+                <label for="timeInterval">Time Interval</label>
+                <select name="timeInterval" class="form-control" id="timeIntervalSelect" selectedValue="1">
+                    <option value="1">Weekly</option>
+                    <option value="2">BiWeekly</option>
+                    <option value="3">Monthly</option>
+                </select>
+            </div>
+            <div class="mt-4 d-flex" style="flex-direction: row; justify-content: space-between;">
+                <button class="btn" onclick="goBackToPayment(event)" id="previousButton">&#10094;  PREVIOUS </button>
+                <input type="submit" name="amount" class="btn btn-primary py-3 px-4" value="DEPOSIT">
+            </div>
         </div>
-        <div class="mt-4">
-            <input type="submit" name="amount" class="btn btn-primary" value="DEPOSIT">
-        </div>
+        
     </form>
 </div>
+<script>
+    previousButton = document.getElementById('previousButton');
+    continueButton = document.getElementById('continueButton');
+    currencySelectField = document.getElementById('currencySelectField');
+    intervalSelectField = document.getElementById('intervalSelect');
+    monthlyContribution = document.getElementById('monthlyContribution');
+    initialPaymentField = document.getElementById('initialPaymentField');
 
+    settings = document.getElementById('settings');
+    payment = document.getElementById('payment');
+
+    function continueToSettings(event)
+    {
+        if(!(currencySelectField.value == '' || initialPaymentField.value == '' || initialPaymentField.value == NaN))
+        {
+            settings.classList.remove('d-none');
+            payment.classList.add('d-none');
+        }
+
+        event.preventDefault();
+    }
+
+
+    function goBackToPayment(event)
+    {
+        settings.classList.add('d-none');
+        payment.classList.remove('d-none');
+
+        event.preventDefault();
+    }
+</script>
 {% endblock page %}

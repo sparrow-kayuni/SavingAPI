@@ -1,8 +1,9 @@
-from flask import Response, request, render_template, redirect
+from flask import Response, request, render_template, redirect, url_for
 from flask_login import current_user, login_user, logout_user, login_required
 from datetime import timedelta
 from . import app, db
 from .models import User, Account, Country
+from .otp import OTPVerificationClient
 
 
 @app.route('/')
@@ -72,7 +73,9 @@ def register():
             account_type = 'Group'
         else:
             account_type = 'Individual'
-        
+
+        # send otp
+
         country = Country.query.filter_by(country_name=country_name).first()
 
         account = Account(account_type=account_type, country=country)
@@ -89,11 +92,44 @@ def register():
 
         print(f'{user}\n{account}\n{country}')
 
-        login_user(user, duration=timedelta(minutes=10))
-
-        return redirect('account')
+        return redirect(url_for('verify_otp', id=user.user_id))
     
     return render_template('register.html', message='')
+
+
+@app.route('/verify-otp-<int:id>', methods=['GET', 'POST'])
+def verify_otp(id):
+
+    user = User.query.get(id)
+
+    if (request.method == 'POST'):
+
+        phone = user.msisdn
+        otp_code = request.form.get('otp')
+
+        print(f'Phone: {phone}\n OTP: {otp_code}')
+
+        client = OTPVerificationClient()
+
+        if not (request.form.get('phone') == None or phone == ''):
+
+            verification = client.send_otp(phone)
+            print(f'Verification Status: {verification.status}')
+            return render_template('verify_otp.html', user=user)
+
+        if not (request.form.get('otp') == None or otp_code == ''):
+
+            check = client.verify_otp(phone, otp_code)
+            
+            print(f'Check status: {check.status}')
+            
+            login_user(user, duration=timedelta(minutes=10))
+
+            return redirect('account')
+        
+    return render_template('send_otp.html', user=user)
+
+
 
 
 @app.route('/account', methods=['GET'])
@@ -105,6 +141,25 @@ def account():
 @app.route('/deposit', methods=['GET', 'POST'])
 @login_required
 def deposit():
+    
+    if request.method == 'POST':
+        initial_payment = request.form.get('initialPayment')
+        currency = request.form.get('currency')
+        monthly_contribution = request.form.get('monthlyContribution')
+        time_interval = request.form.get('timeInterval')
+
+        # connect momo account & check balance
+
+        # initiate transaction
+
+        # validate transaction
+
+        # add payment transaction to db
+
+        print(f'{initial_payment}\n{currency}\n{monthly_contribution}\n{time_interval}')
+
+        return redirect('account')
+
     return render_template('deposit.html')
 
 

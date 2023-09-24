@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block page %}
+<div class="container">
+    <h1 class="mb-5">Verify Phone Number.</h1>
+    <form method="post" class="form-group card row col-md-6 p-3">
+        <h3 class="p-3">Send OTP To Phone Number</h3>
+        <div class="mt-4" id="otp">
+            <div class="mt-2">
+                <label for="otp">Phone Number</label>
+                <input type="number" name="phone" class="form-control" id="phoneNumberField" value="{{ user.msisdn }}" placeholder="Enter Phone Number">
+            </div>
+            <div class="mt-4 d-flex" style="flex-direction: row; justify-content: space-between;">
+                <input type="submit" name="sendOtp" class="btn btn-primary py-3 px-4" value="SEND OTP">
+            </div>
+        </div>
+        
+    </form>
+</div>
+{% endblock page %}
